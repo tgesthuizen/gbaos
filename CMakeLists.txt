@@ -13,12 +13,21 @@ add_compile_options(
 add_subdirectory(font8x8)
 add_subdirectory(tinyprintf)
 
-add_executable(kernel kstart.s main.c)
+add_executable(
+  kernel
+
+  # This must be first in the source list
+  kstart.s
+
+  display.c
+  main.c
+)
 target_link_options(
   kernel
   PUBLIC
   -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
+target_link_libraries(kernel PUBLIC tinyprintf font8x8)
 
 add_custom_command(
   TARGET kernel

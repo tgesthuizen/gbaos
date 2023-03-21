@@ -3,7 +3,12 @@
 
 #include "types.h"
 
-enum ScreenDimensions { Width = 240, Height = 160 };
+enum term_dims { TERM_WIDTH = 30, TERM_HEIGHT = 20 };
+
+void putc(int ch);
+int printf(char *fmt, ...);
+
+enum screen_dims { SCREEN_WIDTH = 240, SCREEN_HEIGHT = 160 };
 
 #define MEM_IO 0x04000000
 #define MEM_VRAM 0x06000000
