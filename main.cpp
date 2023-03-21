@@ -1,9 +1,11 @@
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed int s32;
-typedef signed short s16;
-typedef signed char s8;
+using u32 = unsigned int;
+using u16 = unsigned short;
+using u8 = unsigned char;
+using s32 = signed int;
+using s16 = signed short;
+using s8 = signed char;
+
+namespace {
 
 enum ScreenDimensions { Width = 240, Height = 160 };
 
@@ -24,14 +26,22 @@ enum Colors {
   White = 0x7FFF,
 };
 
-static u16 make_color(int red, int green, int blue) {
+constexpr u16 make_color(int red, int green, int blue) {
   return red | (green << 5) | (blue << 10);
 }
 
-int main(int argc, char **argv) {
+u32 get_cpsr() {
+  u32 result;
+  asm volatile("msr cpsr, %1\n\t" ::"r"(result));
+  return result;
+}
+
+} // namespace
+
+int main() {
   video_mode_reg = 0x403;
   for (int i = 0; i < Width * Height; ++i) {
-    video_mem[i] = Red;
+    video_mem[i] = Colors::Red;
   }
   return 0;
 }

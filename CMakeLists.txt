@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(gba-tinkering CXX ASM)
+project(gba-tinkering C ASM)
 
 add_compile_options(
   -Wall -Wextra
@@ -10,7 +10,7 @@ add_compile_options(
 )
 
 add_library(asm-parts STATIC crt0.s)
-add_executable(example main.cpp)
+add_executable(example main.c)
 target_link_libraries(
   example
   PUBLIC
