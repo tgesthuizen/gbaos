@@ -8,6 +8,7 @@ add_compile_options(
   -Wall -Wextra
   -ffreestanding
   -mcpu=arm7tdmi
+  -mthumb-interwork
 )
 
 add_subdirectory(font8x8)
