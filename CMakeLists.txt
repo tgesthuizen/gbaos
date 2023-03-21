@@ -2,24 +2,35 @@ cmake_minimum_required(VERSION 3.10)
 
 project(gba-tinkering C ASM)
 
+include(GNUInstallDirs)
+
 add_compile_options(
   -Wall -Wextra
   -ffreestanding
-  -fno-rtti -fno-exceptions
   -mcpu=arm7tdmi
 )
 
-add_library(asm-parts STATIC crt0.s)
-add_executable(example main.c)
-target_link_libraries(
-  example
+add_subdirectory(font8x8)
+
+add_executable(kernel kstart.s main.c)
+target_link_options(
+  kernel
   PUBLIC
-  asm-parts
+  -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
+
 add_custom_command(
-  TARGET example
+  TARGET kernel
   POST_BUILD
-  COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:example> example.gba
-  COMMENT "Generating example.gba"
+  COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:kernel> kernel.gba
+  COMMENT "Generating kernel.gba"
 )
-target_link_options(example PUBLIC -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld)
+
+install(
+  TARGETS kernel
+)
+
+install(
+  FILES kernel.gba
+  DESTINATION ${CMAKE_INSTALL_DATADIR}
+)
