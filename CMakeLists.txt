@@ -11,6 +11,7 @@ add_compile_options(
 )
 
 add_subdirectory(font8x8)
+add_subdirectory(tinyprintf)
 
 add_executable(kernel kstart.s main.c)
 target_link_options(

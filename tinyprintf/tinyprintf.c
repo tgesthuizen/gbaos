@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define PRINTF_LONG_LONG_SUPPORT
 
 /* Enable %z (size_t) support */
-#define PRINTF_SIZE_T_SUPPORT
+// #define PRINTF_SIZE_T_SUPPORT
 
 /*
  * Configuration adjustments
