@@ -68,7 +68,7 @@ thumb_entry:
 	mov r2, #0
 	bl  __boot_memset
 
-	@Zero .sbss section
+	@ Zero .sbss section
 	ldr r0, =__sbss_start
 	ldr r1, =__sbss_end
 	mov r2, #0
