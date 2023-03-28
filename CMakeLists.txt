@@ -18,10 +18,8 @@ add_subdirectory(tinyprintf)
 add_executable(
   kernel
 
-  # This must be first in the source list
-  kstart.s
-
   display.c
+  kstart.s
   main.c
 )
 target_link_options(
@@ -30,6 +28,10 @@ target_link_options(
   -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
 target_link_libraries(kernel PUBLIC tinyprintf font8x8)
+set_target_properties(kernel PROPERTIES
+  OUTPUT_NAME kernel.elf
+  LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
+)
 
 add_custom_command(
   TARGET kernel

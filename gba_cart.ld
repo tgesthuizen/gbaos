@@ -12,9 +12,10 @@ SECTIONS
   {
     KEEP (*(.rom_header))
   } >rom =0xff
-  
+
   .text ALIGN(4) :
   {
+    *(.text.startup)
     *(.text)
     *(.text.*)
   } >rom = 0xff

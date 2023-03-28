@@ -1,7 +1,7 @@
 .cpu arm7tdmi
 .arm
 
-.section ".rom_header","a"
+.section ".rom_header","ax"
 .global rom_header, __boot_method, __slave_number
 .type rom_header, %object
 rom_header:
@@ -37,7 +37,7 @@ __slave_number:
 
 .size rom_header, .-rom_header
 
-.section ".text", "ax"
+.section ".text.startup", "ax"
 .global start_vector
 .type start_vector, %function
 .func start_vector, start_vector
