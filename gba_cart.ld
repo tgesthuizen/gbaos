@@ -16,7 +16,9 @@ SECTIONS
   .text ALIGN(4) :
   {
     *(.text)
+    *(.text.*)
   } >rom = 0xff
+
   .rodata :
   {
      *(.rodata)
