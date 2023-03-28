@@ -2,18 +2,18 @@
 
 static volatile int irqs_handled;
 
-__attribute__((isr("IRQ"))) static void handle_irq() {
-  putc('x');
+__attribute__((isr("IRQ"), target("arm"), noinline)) static void handle_irq() {
   ++irqs_handled;
 }
 
-static unsigned int get_cpsr() {
+static __attribute__((target("arm"), noinline)) unsigned int get_cpsr() {
   unsigned int res;
   asm volatile("mrs %0, cpsr\n" : "=r"(res));
   return res;
 }
 
-static void set_cpsr(unsigned int cpsr) {
+static __attribute__((target("arm"), noinline)) void
+set_cpsr(unsigned int cpsr) {
   asm volatile("msr cpsr, %0\n" : : "r"(cpsr));
 }
 
