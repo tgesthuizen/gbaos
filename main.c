@@ -2,9 +2,7 @@
 
 static volatile int irqs_handled;
 
-__attribute__((isr("IRQ"), target("arm"), noinline)) static void handle_irq() {
-  ++irqs_handled;
-}
+static __attribute__((target("arm"))) void handle_irq() { ++irqs_handled; }
 
 static __attribute__((target("arm"), noinline)) unsigned int get_cpsr() {
   unsigned int res;
