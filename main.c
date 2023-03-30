@@ -1,8 +1,50 @@
 #include "display.h"
 
-static volatile int irqs_handled;
+#define IE (*(volatile unsigned short *)0x4000200)
+#define IF (*(volatile unsigned short *)0x4000202)
+#define IRQ_HANDLER_ADDR (*(void *volatile *)0x3007FFC)
+#define IME (*(volatile unsigned *)0x4000208)
+#define DIPSTAT (*(volatile unsigned short *)0x4000004)
 
-static __attribute__((target("arm"))) void handle_irq() { ++irqs_handled; }
+enum irq_kind {
+  irq_kind_lcd_vblank,
+  irq_kind_lcd_hblank,
+  irq_kind_lcd_vcounter_match,
+  irq_kind_timer_0_overflow,
+  irq_kind_timer_1_overflow,
+  irq_kind_timer_2_overflow,
+  irq_kind_timer_3_overflow,
+  irq_kind_serial_communication,
+  irq_kind_dma_0,
+  irq_kind_dma_1,
+  irq_kind_dma_2,
+  irq_kind_dma_3,
+  irq_kind_keypad,
+  irq_kind_gamepak,
+
+  irq_kind_max,
+};
+
+typedef void (*irq_handler)();
+
+static irq_handler irq_table[irq_kind_max];
+
+static __attribute__((target("arm"))) void handle_irq() {
+  const unsigned short if_copy = IF;
+  const unsigned short ie_copy = IE;
+  for (int i = 0; i < irq_kind_max; ++i) {
+    const int mask = 1 << i;
+    if (if_copy & mask && ie_copy & mask) {
+      IF = mask;
+      const irq_handler h = irq_table[i];
+      if (h)
+        h();
+    }
+  }
+}
+
+static volatile int irqs_handled;
+static void handle_vblank() { ++irqs_handled; }
 
 static __attribute__((target("arm"), noinline)) unsigned int get_cpsr() {
   unsigned int res;
@@ -15,14 +57,9 @@ set_cpsr(unsigned int cpsr) {
   asm volatile("msr cpsr, %0\n" : : "r"(cpsr));
 }
 
-#define IE (*(volatile unsigned short *)0x4000200)
-#define IF (*(volatile unsigned short *)0x4000202)
-#define IRQ_HANDLER_ADDR (*(void *volatile *)0x3007FFC)
-#define IME (*(volatile unsigned *)0x4000208)
-#define DIPSTAT (*(volatile unsigned short *)0x4000004)
-
-int main(int argc, char **argv) {
-  IE = 1 << 0 | 1 << 12;
+int main() {
+  IE = 1 << irq_kind_lcd_vblank;
+  irq_table[irq_kind_lcd_vblank] = handle_vblank;
   IF = *(volatile unsigned short *)0x4000202;
   IRQ_HANDLER_ADDR = &handle_irq;
   DIPSTAT = 0b11000;
