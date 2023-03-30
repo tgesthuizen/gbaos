@@ -21,6 +21,7 @@ add_executable(
   display.c
   kstart.s
   main.c
+  string.c
 )
 target_link_options(
   kernel

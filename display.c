@@ -1,5 +1,7 @@
 #include "display.h"
+#include "string.h"
 #include "tinyprintf.h"
+
 #include <stdarg.h>
 #include <stddef.h>
 
@@ -27,7 +29,11 @@ void putc(int ch) {
     display_x = 0;
   }
 
-  // TODO: Handle y overflow
+  if (display_y == TERM_HEIGHT) {
+    memmove(video_mem, video_mem + SCREEN_WIDTH * 8,
+            sizeof *video_mem * SCREEN_WIDTH * (SCREEN_HEIGHT - 8));
+    --display_y;
+  }
 
   for (int y = 0; y < 8; ++y) {
     for (int x = 0; x < 8; ++x) {
