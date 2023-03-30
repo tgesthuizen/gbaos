@@ -60,7 +60,7 @@ set_cpsr(unsigned int cpsr) {
 int main() {
   IE = 1 << irq_kind_lcd_vblank;
   irq_table[irq_kind_lcd_vblank] = handle_vblank;
-  IF = *(volatile unsigned short *)0x4000202;
+  IF = IF;
   IRQ_HANDLER_ADDR = &handle_irq;
   DIPSTAT = 0b11000;
   IME = 1;
