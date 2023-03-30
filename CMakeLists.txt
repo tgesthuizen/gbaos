@@ -13,3 +13,4 @@ add_compile_options(
 )
 
 add_subdirectory(kern)
+add_subdirectory(libc)
