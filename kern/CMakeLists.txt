@@ -1,6 +1,9 @@
 add_subdirectory(font8x8)
 add_subdirectory(tinyprintf)
 
+add_library(kernel-headers INTERFACE)
+target_include_directories(kernel-headers INTERFACE include)
+
 add_executable(
   kernel
 
@@ -14,7 +17,13 @@ target_link_options(
   PUBLIC
   -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
-target_link_libraries(kernel PUBLIC tinyprintf font8x8)
+target_link_libraries(
+  kernel
+  PUBLIC
+  font8x8
+  kernel-headers
+  tinyprintf
+)
 set_target_properties(kernel PROPERTIES
   OUTPUT_NAME kernel.elf
   LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
