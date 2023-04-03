@@ -2,11 +2,11 @@
 #define KERN_SYS_SYSCALL_H
 
 enum syscall_num {
+  SYS_EXIT,
   SYS_READ,
   SYS_WRITE,
   SYS_OPEN,
   SYS_CLOSE,
-  SYS_EXIT,
 };
 
 #define SYSCALL_SWI 28

@@ -6,7 +6,6 @@ include(GNUInstallDirs)
 
 add_compile_options(
   -Wall -Wextra
-  -ffreestanding
   -mcpu=arm7tdmi
   -mthumb-interwork
   -mthumb
@@ -14,3 +13,6 @@ add_compile_options(
 
 add_subdirectory(kern)
 add_subdirectory(libc)
+link_libraries(startfiles_static libc)
+
+add_subdirectory(tools)

@@ -17,6 +17,11 @@ target_link_options(
   PUBLIC
   -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
+target_compile_options(
+  kernel
+  PUBLIC
+  -ffreestanding -nostdlib
+)
 target_link_libraries(
   kernel
   PUBLIC

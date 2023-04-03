@@ -1,6 +1,8 @@
 #ifndef LIBC_STDLIB_H
 #define LIBC_STDLIB_H
 
+#include <stddef.h>
+
 void abort(void);
 void exit(int code);
 void _Exit(int code);
