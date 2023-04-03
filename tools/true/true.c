@@ -1,3 +1,4 @@
+extern int __bss_start__;
 int main() {
-  return TRUE_EXITCODE;
+  return __bss_start__;
 }
