@@ -17,7 +17,12 @@ add_compile_options(
   -fpic -msingle-pic-base -mlong-calls
 )
 add_link_options(
-  -pie -Wl,--no-dynamic-linker
+  -pie
+  -Wl,--no-dynamic-linker
+  -Wl,-z,common-page-size=512
+  -Wl,-z,max-page-size=512
+  -Wl,-z,noexecstack
+  -Wl,-z,text
 )
 
 add_subdirectory(libc)
