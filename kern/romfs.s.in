@@ -1,0 +1,6 @@
+.section ".romfs", "a"
+	.align 9
+	.type __romfs_start, %object
+__romfs_start:
+	.incbin "@ROOTFS_FILE@"
+	.size __romfs_start, .-__romfs_start

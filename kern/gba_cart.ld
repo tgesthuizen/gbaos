@@ -35,6 +35,11 @@ SECTIONS
   .ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) } >rom
   __exidx_end = .;
 
+  .romfs ALIGN(512):
+  {
+	*(.romfs)
+  } >rom
+
   .data :
   {
     __data_start = ABSOLUTE(.);
@@ -45,7 +50,7 @@ SECTIONS
     __data_end = ABSOLUTE(.);
   } >ewram AT>rom = 0xff
   __data_lma = LOADADDR(.data);
-  
+
   .bss (NOLOAD) :
   {
     __bss_start = ABSOLUTE(.);

@@ -4,6 +4,8 @@ add_subdirectory(tinyprintf)
 add_library(kernel-headers INTERFACE)
 target_include_directories(kernel-headers INTERFACE include)
 
+configure_file(romfs.s.in ${CMAKE_CURRENT_BINARY_DIR}/romfs.s @ONLY)
+
 add_executable(
   kernel
 
@@ -11,6 +13,13 @@ add_executable(
   kstart.s
   main.c
   string.c
+
+  ${CMAKE_CURRENT_BINARY_DIR}/romfs.s
+)
+set_source_files_properties(
+  ${CMAKE_CURRENT_BINARY_DIR}/romfs.s
+  PROPERTIES
+  OBJECT_DEPNDS ${ROOTFS_FILE}
 )
 target_link_options(
   kernel

@@ -12,6 +12,7 @@ add_compile_options(
 )
 
 set(SYSTEM_PAGE_SIZE 512)
+set(ROOTFS_FILE ${CMAKE_CURRENT_BINARY_DIR}/root.romfs)
 
 add_subdirectory(kern)
 
@@ -58,12 +59,12 @@ find_program(
 )
 
 add_custom_command(
-  OUTPUT root.romfs
+  OUTPUT ${ROOTFS_FILE}
   DEPENDS rootfs_files
-  COMMAND ${GENROMFS_BINARY} -a ${SYSTEM_PAGE_SIZE} -V rootfs -f root.romfs -d ${ROM_ROOT}
+  COMMAND ${GENROMFS_BINARY} -a ${SYSTEM_PAGE_SIZE} -V rootfs -f ${ROOTFS_FILE} -d ${ROM_ROOT}
 )
 
 add_custom_target(
-  rootfs ALL
-  DEPENDS root.romfs
+  rootfs
+  DEPENDS ${ROOTFS_FILE}
 )
