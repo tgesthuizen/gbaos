@@ -11,6 +11,8 @@ add_compile_options(
   -mthumb
 )
 
+set(SYSTEM_PAGE_SIZE 512)
+
 add_subdirectory(kern)
 
 add_compile_options(
@@ -19,8 +21,8 @@ add_compile_options(
 add_link_options(
   -pie
   -Wl,--no-dynamic-linker
-  -Wl,-z,common-page-size=512
-  -Wl,-z,max-page-size=512
+  -Wl,-z,common-page-size=${SYSTEM_PAGE_SIZE}
+  -Wl,-z,max-page-size=${SYSTEM_PAGE_SIZE}
   -Wl,-z,noexecstack
   -Wl,-z,text
 )
@@ -58,7 +60,7 @@ find_program(
 add_custom_command(
   OUTPUT root.romfs
   DEPENDS rootfs_files
-  COMMAND ${GENROMFS_BINARY} -V rootfs -f root.romfs -d ${ROM_ROOT}
+  COMMAND ${GENROMFS_BINARY} -a ${SYSTEM_PAGE_SIZE} -V rootfs -f root.romfs -d ${ROM_ROOT}
 )
 
 add_custom_target(
