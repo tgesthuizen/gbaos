@@ -12,6 +12,7 @@ add_executable(
   display.c
   kstart.s
   main.c
+  romfs.c
   string.c
 
   ${CMAKE_CURRENT_BINARY_DIR}/romfs.s

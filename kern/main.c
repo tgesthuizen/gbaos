@@ -1,4 +1,5 @@
 #include "display.h"
+#include "romfs.h"
 
 #define IE (*(volatile unsigned short *)0x4000200)
 #define IF (*(volatile unsigned short *)0x4000202)
@@ -69,11 +70,16 @@ int main() {
   printf("Hello, World!\n");
   printf("CPSR: %x\n", get_cpsr());
   printf("IF: %x\n", *(volatile unsigned short *)0x4000202);
+  uint32_t cur;
+  romfs_get_root(&cur);
+  do {
+    printf("found: %s\n", romfs_file_name(cur));
+  } while (romfs_read_next(&cur, cur) == 0);
   int old_irqs_handled = irqs_handled;
   while (1) {
     if (old_irqs_handled != irqs_handled) {
       old_irqs_handled = irqs_handled;
-      printf("%d\n", old_irqs_handled);
+      // printf("%d\n", old_irqs_handled);
     }
   }
   return 0;
