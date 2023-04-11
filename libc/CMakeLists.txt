@@ -29,6 +29,11 @@ target_link_libraries(
   PUBLIC
   kernel-headers
 )
+target_compile_options(
+  libc
+  PRIVATE
+  -nostdlib
+)
 set_target_properties(
   libc
   PROPERTIES
