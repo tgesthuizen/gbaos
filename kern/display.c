@@ -30,8 +30,8 @@ void putc(int ch) {
   }
 
   if (display_y == TERM_HEIGHT) {
-    memmove(video_mem, video_mem + SCREEN_WIDTH * 8,
-            sizeof *video_mem * SCREEN_WIDTH * (SCREEN_HEIGHT - 8));
+    vmemmove32(video_mem, video_mem + SCREEN_WIDTH * 8,
+               sizeof *video_mem * SCREEN_WIDTH * (SCREEN_HEIGHT - 8) / 4);
     --display_y;
   }
 

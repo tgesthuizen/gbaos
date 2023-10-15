@@ -39,3 +39,7 @@ void *memmove(void *dest_void, const void *src_void, size_t len) {
 
   return dest_void;
 }
+
+extern void memmove32(void *dst_void, const void *src_void, size_t count);
+extern void vmemmove32(volatile void *dst_void, const volatile void *src_void,
+                       size_t count);
