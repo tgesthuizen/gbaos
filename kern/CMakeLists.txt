@@ -20,7 +20,7 @@ add_executable(
 set_source_files_properties(
   ${CMAKE_CURRENT_BINARY_DIR}/romfs.s
   PROPERTIES
-  OBJECT_DEPNDS ${ROOTFS_FILE}
+  OBJECT_DEPENDS ${ROOTFS_FILE}
 )
 target_link_options(
   kernel
@@ -48,6 +48,7 @@ add_custom_command(
   TARGET kernel
   POST_BUILD
   COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:kernel> kernel.gba
+  COMMAND ${GBAFIX_BINARY} kernel.gba -t "gbaos" -c2OSE -mTG
   COMMENT "Generating kernel.gba"
 )
 

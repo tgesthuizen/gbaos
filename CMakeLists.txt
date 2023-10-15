@@ -14,6 +14,20 @@ add_compile_options(
 set(SYSTEM_PAGE_SIZE 512)
 set(ROOTFS_FILE ${CMAKE_CURRENT_BINARY_DIR}/root.romfs)
 
+find_program(
+  GBAFIX_BINARY
+  gbafix
+  DOC "gbafix binary to make a valid GBA ROM header"
+  REQUIRED
+)
+
+find_program(
+  GENROMFS_BINARY
+  genromfs
+  DOC "genromfs binary to build the romfs for the system"
+  REQUIRED
+)
+
 add_subdirectory(kern)
 
 add_compile_options(
@@ -50,13 +64,6 @@ function(add_romfs_binary bin_target)
 endfunction()
 
 add_subdirectory(tools)
-
-find_program(
-  GENROMFS_BINARY
-  genromfs
-  DOC "genromfs binary to build the romfs for the system"
-  REQUIRED
-)
 
 add_custom_command(
   OUTPUT ${ROOTFS_FILE}
