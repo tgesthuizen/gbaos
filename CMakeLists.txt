@@ -20,7 +20,10 @@ set(ROOTFS_FILE ${CMAKE_CURRENT_BINARY_DIR}/root.romfs)
 add_subdirectory(kern)
 
 add_compile_options(
-  -fpic -msingle-pic-base -mlong-calls
+  -fpic
+  -fomit-frame-pointer
+  -msingle-pic-base
+  -mlong-calls
 )
 add_link_options(
   -pie
