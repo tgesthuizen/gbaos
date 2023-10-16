@@ -27,6 +27,10 @@ target_link_options(
   PUBLIC
   -T ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
+set_target_properties(kernel PROPERTIES
+  OUTPUT_NAME kernel.elf
+  LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
+)
 target_compile_options(
   kernel
   PUBLIC
@@ -38,10 +42,6 @@ target_link_libraries(
   font8x8
   kernel-headers
   tinyprintf
-)
-set_target_properties(kernel PROPERTIES
-  OUTPUT_NAME kernel.elf
-  LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gba_cart.ld
 )
 
 add_custom_command(
