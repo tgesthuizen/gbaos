@@ -4,6 +4,9 @@ project(gba-tinkering C ASM)
 
 include(GNUInstallDirs)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(DiscoverHostTools)
+
 add_compile_options(
   -Wall -Wextra
   -mcpu=arm7tdmi
@@ -13,20 +16,6 @@ add_compile_options(
 
 set(SYSTEM_PAGE_SIZE 512)
 set(ROOTFS_FILE ${CMAKE_CURRENT_BINARY_DIR}/root.romfs)
-
-find_program(
-  GBAFIX_BINARY
-  gbafix
-  DOC "gbafix binary to make a valid GBA ROM header"
-  REQUIRED
-)
-
-find_program(
-  GENROMFS_BINARY
-  genromfs
-  DOC "genromfs binary to build the romfs for the system"
-  REQUIRED
-)
 
 add_subdirectory(kern)
 
