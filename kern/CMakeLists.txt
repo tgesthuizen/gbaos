@@ -10,6 +10,8 @@ add_executable(
   kernel
 
   display.c
+  hwregs.c
+  irq.c
   kstart.s
   main.c
   romfs.c
