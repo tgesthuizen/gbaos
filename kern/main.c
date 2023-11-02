@@ -1,12 +1,10 @@
 #include "display.h"
+#include "hwregs.h"
 #include "irq.h"
 #include "romfs.h"
-#include "hwregs.h"
 
 static volatile int irqs_handled;
 static void handle_vblank() { ++irqs_handled; }
-
-
 static void enable_interrupts() { IME = 1; }
 
 int main() {
@@ -18,7 +16,7 @@ int main() {
   video_mode_reg = 0x403;
   printf("Hello, World!\n");
   printf("CPSR: %x\n", get_cpsr());
-  printf("IF: %x\n", *(volatile unsigned short *)0x4000202);
+  printf("IF: %x\n", IF);
   uint32_t cur;
   romfs_get_root(&cur);
   do {
