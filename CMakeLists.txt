@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(gba-tinkering C ASM)
 
-include(GNUInstallDirs)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(GNUInstallDirs)
 include(DiscoverHostTools)
 
 add_compile_options(

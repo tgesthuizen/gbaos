@@ -4,7 +4,10 @@
 #include "romfs.h"
 
 static volatile int irqs_handled;
-static void handle_vblank() { ++irqs_handled; }
+static void *handle_vblank(void *lr) {
+  ++irqs_handled;
+  return lr;
+}
 static void enable_interrupts() { IME = 1; }
 
 int main() {

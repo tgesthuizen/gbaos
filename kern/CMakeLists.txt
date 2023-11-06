@@ -16,6 +16,7 @@ add_executable(
   main.c
   romfs.c
   string.c
+  task.c
 
   ${CMAKE_CURRENT_BINARY_DIR}/romfs.s
 )
