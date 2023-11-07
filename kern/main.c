@@ -4,9 +4,9 @@
 #include "romfs.h"
 
 static volatile int irqs_handled;
-static void *handle_vblank(void *lr) {
+static void handle_vblank(struct irq_info *info) {
+  (void)info;
   ++irqs_handled;
-  return lr;
 }
 static void enable_interrupts() { IME = 1; }
 

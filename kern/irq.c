@@ -4,9 +4,8 @@
 #include <stdint.h>
 
 static irq_handler irq_table[irq_kind_max];
-uint32_t regs_on_irq_entry[16];
 
-static __attribute__((target("arm"))) void handle_irq() {
+static __attribute__((target("arm"))) void handle_irq(struct irq_info *info) {
   const unsigned short if_copy = IF;
   const unsigned short ie_copy = IE;
   for (int i = 0; i < irq_kind_max; ++i) {
@@ -15,27 +14,29 @@ static __attribute__((target("arm"))) void handle_irq() {
       IF = mask;
       const irq_handler h = irq_table[i];
       if (h)
-        return h();
+        return h(info);
     }
   }
 }
 
-// Saves registers, calls handle_irq and returns from the interrupt
+/**
+ * Pushes remaining GP registers on the stack.
+ * This way the pushed registers in combination with the registers the BIOS
+ * saved combine to form the irq_info struct on the stack.
+ * It is passed to handle_irq and restored afterwards to allow to switch
+ * context.
+ */
 static __attribute__((target("arm"), naked)) void irq_entry() {
-  __asm volatile(
-      "ldr r0, %[regs_on_entry]\n\t"
-      "adds r0, %[r4_offset]\n\t"
-      "stmfa r0!, {r4-r11}\n\t"
-      "ldmfd sp!, {r1, r2}\n\t" // r12, r14
-      "stmfa r0!, {r1, r2}\n\t"
-      "ldmfd sp!, {r1-r5}\n\t"
-      "ldr r0, %[regs_on_entry]\n\t"
-      "stmfa r0!, {r1-r5}\n\t"
-      "bl %c[handle_irq]\n\t"
-      "ldr r0, %[regs_on_entry]\n\t"
-      "ldmfa r0!, {r0-r11,r12,r14}\n\t"
-      "subs r15, r14, #4\n" ::[regs_on_entry] "m"(regs_on_irq_entry),
-      [handle_irq] "i"(handle_irq), [r4_offset] "i"(sizeof(uint32_t) * 4));
+  __asm("stmfd sp!, {r4-r11}\n\t"
+        "movs r0, sp\n\t"
+        "stmfd sp!, {r12, lr}\n\t"
+        "bl %c[handle_irq]\n\t"
+        "ldr r0, [sp, #4]\n\t"
+        "adds sp, #(10 * 4)\n\t"
+        "bx r0\n"
+        :
+        : [handle_irq] "i"(handle_irq)
+        : "r0", "memory", "cc");
 }
 
 void init_irq() { IRQ_HANDLER_ADDR = &irq_entry; }

@@ -30,13 +30,14 @@ void add_task(struct task_state *new_task) {
 
 struct task_state *get_current_task() { return current_task; }
 
-extern uint32_t regs_on_irq_entry[];
+static const char register_at_index_in_irq_info[] = {4,  5, 6, 7, 8, 9,  10,
+                                                     11, 0, 1, 2, 3, 12, 14};
 
 void __attribute__((target("arm")))
-store_user_context_in_current_task_from_irq() {
-  for (int i = 0; i < 13; ++i)
-    current_task->regs.r[i] = regs_on_irq_entry[i];
-  current_task->regs.r[15] = regs_on_irq_entry[14] - 4;
+store_user_context_in_current_task_from_irq(struct irq_info *info) {
+  for (int i = 0; i < 14; ++i)
+    current_task->regs.r[(int)register_at_index_in_irq_info[i]] = info->regs[i];
+  current_task->regs.r[15] = info->r14 - 4;
 
   uint32_t captured_lr, captured_sp;
   __asm volatile(
@@ -45,7 +46,7 @@ store_user_context_in_current_task_from_irq() {
       "msr cpsr, r1\n\t"
       "mov %[captured_lr], lr\n\t"
       "mov %[captured_sp], sp\n\t"
-      "mrs r0, cpsr\n\t"
+      "msr cpsr, r0\n\t"
       : [captured_lr] "=r"(captured_lr), [captured_sp] "=r"(captured_sp)
       : [system_psr] "i"(cpu_mode_system | PSR_IRQ_DISABLED)
       : "r0", "r1");
@@ -58,10 +59,12 @@ store_user_context_in_current_task_from_irq() {
 }
 
 void __attribute__((target("arm")))
-switch_user_context_to_current_task_from_irq() {
-  for (int i = 0; i < 13; ++i)
-    regs_on_irq_entry[i] = current_task->regs.r[i];
-  regs_on_irq_entry[14] = current_task->regs.r[15] + 4;
+switch_user_context_to_current_task_from_irq(struct irq_info *info) {
+  for (int i = 0; i < 14; ++i) {
+    info->regs[i] = current_task->regs.r[(int)register_at_index_in_irq_info[i]];
+  }
+  info->r14 = current_task->regs.r[15] + 4;
+
   uint32_t irq_psr;
   __asm volatile("mrs %[irq_psr], cpsr\n\t"
                  "msr cpsr, %[system_psr]\n\t"
@@ -79,8 +82,8 @@ switch_user_context_to_current_task_from_irq() {
 }
 
 void __attribute__((target("arm")))
-switch_task_from_irq(struct task_state *task) {
-  store_user_context_in_current_task_from_irq();
+switch_task_from_irq(struct task_state *task, struct irq_info *info) {
+  store_user_context_in_current_task_from_irq(info);
   current_task = task;
-  switch_user_context_to_current_task_from_irq();
+  switch_user_context_to_current_task_from_irq(info);
 }

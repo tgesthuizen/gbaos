@@ -1,6 +1,7 @@
 #ifndef KERN_TASK_H
 #define KERN_TASK_H
 
+#include "irq.h"
 #include "types.h"
 
 struct register_set {
@@ -17,6 +18,6 @@ void init_task_system();
 void add_task(struct task_state *state);
 
 struct task_state *get_current_task();
-void switch_task_from_irq(struct task_state *state);
+void switch_task_from_irq(struct task_state *state, struct irq_info *info);
 
 #endif
