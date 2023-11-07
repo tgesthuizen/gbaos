@@ -1,7 +1,7 @@
 #ifndef KERN_ROMFS_H
 #define KERN_ROMFS_H
 
-#include <stdint.h>
+#include "types.h"
 
 enum romfs_filetype {
   romfs_hard_link,
@@ -15,9 +15,9 @@ enum romfs_filetype {
 };
 
 extern const char *romfs_get_name();
-extern const char *romfs_file_name(uint32_t file);
-extern int romfs_get_root(uint32_t *file);
-extern int romfs_read_next(uint32_t *target, uint32_t file);
-extern void *romfs_file_base(uint32_t file);
+extern const char *romfs_file_name(u32 file);
+extern int romfs_get_root(u32 *file);
+extern int romfs_read_next(u32 *target, u32 file);
+extern void *romfs_file_base(u32 file);
 
 #endif

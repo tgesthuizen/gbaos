@@ -1,7 +1,6 @@
 #include "irq.h"
 #include "hwregs.h"
 #include "task.h"
-#include <stdint.h>
 
 static irq_handler irq_table[irq_kind_max];
 

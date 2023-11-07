@@ -8,26 +8,26 @@
 
 struct romfs_header {
   char id[8];
-  uint32_t full_size;
-  uint32_t checksum;
+  u32 full_size;
+  u32 checksum;
   char volume_name[16];
 };
 
 struct romfs_filehdr {
-  uint32_t next_filehdr;
-  uint32_t spec_info;
-  uint32_t size;
-  uint32_t checksum;
+  u32 next_filehdr;
+  u32 spec_info;
+  u32 size;
+  u32 checksum;
   char file_name[16];
 };
 
-static uint32_t be32toh(void *field) {
+static u32 be32toh(void *field) {
   unsigned char *f = field;
-  return ((uint32_t)f[0] << 24) + ((uint32_t)f[1] << 16) +
-         ((uint32_t)f[2] << 8) + ((uint32_t)f[3] << 0);
+  return ((u32)f[0] << 24) + ((u32)f[1] << 16) +
+         ((u32)f[2] << 8) + ((u32)f[3] << 0);
 }
 
-#define ROMFS_NEXT_FILEHDR_ADDR(x) ((x) & ~(uint32_t)15)
+#define ROMFS_NEXT_FILEHDR_ADDR(x) ((x) & ~(u32)15)
 #define ROMFS_NEXT_FILEHDR_EXEC(x) ((x)&8)
 #define ROMFS_NEXT_FILEHDR_TYPE(x) ((x)&7)
 
@@ -40,17 +40,17 @@ const char *romfs_get_name() {
 #define HDR_FROM_OFFSET(offset)                                                \
   ((struct romfs_filehdr *)(__romfs_start + offset))
 
-const char *romfs_file_name(uint32_t file) {
+const char *romfs_file_name(u32 file) {
   return HDR_FROM_OFFSET(file)->file_name;
 }
 
-int romfs_get_root(uint32_t *file) {
+int romfs_get_root(u32 *file) {
   *file = sizeof(struct romfs_header);
   return 0;
 }
 
-int romfs_read_next(uint32_t *target, uint32_t file) {
-  const uint32_t next_hdr =
+int romfs_read_next(u32 *target, u32 file) {
+  const u32 next_hdr =
       ROMFS_NEXT_FILEHDR_ADDR(be32toh(&HDR_FROM_OFFSET(file)->next_filehdr));
   if (!next_hdr)
     return ENOENT;
@@ -58,6 +58,6 @@ int romfs_read_next(uint32_t *target, uint32_t file) {
   return 0;
 }
 
-void *romfs_file_base(uint32_t file) {
+void *romfs_file_base(u32 file) {
   return __romfs_start + file + sizeof(struct romfs_filehdr);
 }

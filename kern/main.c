@@ -20,7 +20,7 @@ int main() {
   printf("Hello, World!\n");
   printf("CPSR: %x\n", get_cpsr());
   printf("IF: %x\n", IF);
-  uint32_t cur;
+  u32 cur;
   romfs_get_root(&cur);
   do {
     printf("found: %s\n", romfs_file_name(cur));

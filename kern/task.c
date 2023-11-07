@@ -1,7 +1,7 @@
 #include "task.h"
 #include "hwregs.h"
 #include "irq.h"
-#include <stdint.h>
+#include "types.h"
 
 static void idle_task() {
   while (1)
@@ -39,7 +39,7 @@ store_user_context_in_current_task_from_irq(struct irq_info *info) {
     current_task->regs.r[(int)register_at_index_in_irq_info[i]] = info->regs[i];
   current_task->regs.r[15] = info->r14 - 4;
 
-  uint32_t captured_lr, captured_sp;
+  u32 captured_lr, captured_sp;
   __asm volatile(
       "mrs r0, cpsr\n\t"
       "ldr r1, =%[system_psr]\n\t"
@@ -52,7 +52,7 @@ store_user_context_in_current_task_from_irq(struct irq_info *info) {
       : "r0", "r1");
   current_task->regs.r[13] = captured_sp;
   current_task->regs.r[14] = captured_lr;
-  uint32_t captured_spsr;
+  u32 captured_spsr;
   __asm volatile("mrs %[captured_spsr], spsr\n\t"
                  : [captured_spsr] "=r"(captured_spsr));
   current_task->regs.psr = captured_spsr;
@@ -65,7 +65,7 @@ switch_user_context_to_current_task_from_irq(struct irq_info *info) {
   }
   info->r14 = current_task->regs.r[15] + 4;
 
-  uint32_t irq_psr;
+  u32 irq_psr;
   __asm volatile("mrs %[irq_psr], cpsr\n\t"
                  "msr cpsr, %[system_psr]\n\t"
                  "movs lr, %[task_lr]\n\t"

@@ -1,7 +1,7 @@
 #ifndef KERN_IRQ_H
 #define KERN_IRQ_H
 
-#include <stdint.h>
+#include "types.h"
 
 enum irq_kind {
   irq_kind_lcd_vblank,
@@ -25,22 +25,22 @@ enum irq_kind {
 struct irq_info {
   union {
     struct {
-      uint32_t r4;
-      uint32_t r5;
-      uint32_t r6;
-      uint32_t r7;
-      uint32_t r8;
-      uint32_t r9;
-      uint32_t r10;
-      uint32_t r11;
-      uint32_t r0;
-      uint32_t r1;
-      uint32_t r2;
-      uint32_t r3;
-      uint32_t r12;
-      uint32_t r14;
+      u32 r4;
+      u32 r5;
+      u32 r6;
+      u32 r7;
+      u32 r8;
+      u32 r9;
+      u32 r10;
+      u32 r11;
+      u32 r0;
+      u32 r1;
+      u32 r2;
+      u32 r3;
+      u32 r12;
+      u32 r14;
     };
-    uint32_t regs[14];
+    u32 regs[14];
   };
 };
 
