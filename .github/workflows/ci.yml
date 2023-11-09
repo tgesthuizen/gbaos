@@ -40,8 +40,11 @@ jobs:
       with:
         name: host-tools
         path: ~/host
-    - name: add-host-tools-to-path
-      run: echo "${HOME}/host/bin" >>$GITHUB_PATH
+    - name: Setup host tools
+      run: |
+        # Executable bit of the programs gets lost somehow, restore them
+        chmod +x ${HOME}/host/bin/*
+        echo "${HOME}/host/bin" >>$GITHUB_PATH
 
     - name: Run CMake
       run: cmake --workflow --preset default
