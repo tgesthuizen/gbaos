@@ -37,7 +37,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: host-tools
-	path: host/
+        path: host/
     - name: add-host-tools-to-path
       run: echo "${PWD}/host/bin"  >>$GITHUB_PATH
 
