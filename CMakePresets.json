@@ -1,0 +1,37 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+	"major": 3,
+	"minor": 10,
+	"patch": 0
+    },
+    "configurePresets": [
+	{
+	    "name": "default",
+	    "displayName": "Default configuration",
+	    "generator": "Ninja",
+	    "binaryDir": "${sourceDir}/build-gcc",
+	    "toolchainFile": "${sourceDir}/gba-gcc.tc",
+	    "cacheVariables": {
+		"CMAKE_BUILD_TYPE": "MinSizeRel"
+	    }
+	}
+    ],
+    "buildPresets": [
+	{
+	    "name": "build",
+	    "configurePreset": "default"
+	}
+    ],
+    "workflowPresets": [
+	{
+	    "name": "default",
+	    "displayName": "Default",
+	    "description": "Build the project with default settings",
+	    "steps": [
+		{"type": "configure", "name": "default"},
+		{"type": "build", "name": "build"}
+	    ]
+	}
+    ]
+}

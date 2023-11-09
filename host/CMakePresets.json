@@ -1,0 +1,43 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+	"major": 3,
+	"minor": 10,
+	"patch": 0
+    },
+    "configurePresets": [
+	{
+	    "name": "default",
+	    "displayName": "Host Tools",
+	    "generator": "Ninja",
+	    "binaryDir": "${sourceDir}/build-host",
+	    "installDir": "${sourceDir}/host",
+	    "cacheVariables": {
+		"CMAKE_BUILD_TYPE": "Release"
+	    }
+	}
+    ],
+    "buildPresets": [
+	{
+	    "name": "build",
+	    "configurePreset": "default"
+	},
+	{
+	    "name": "install",
+	    "inherits": "default",
+	    "targets": ["install"]
+	}
+    ],
+    "workflowPresets": [
+	{
+	    "name": "default",
+	    "displayName": "Host Tools",
+	    "description": "Build host tools required for the build",
+	    "steps": [
+		{"type": "configure", "name": "default"},
+		{"type": "build", "name": "build"},
+		{"type": "build", "name": "install"}
+	    ]
+	}
+    ]
+}

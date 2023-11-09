@@ -1,2 +1,5 @@
 # Editor backup files
 *~
+
+# CMake user files
+CMakeUserPresets.json

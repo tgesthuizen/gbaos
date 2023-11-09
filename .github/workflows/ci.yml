@@ -1,0 +1,45 @@
+# This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
+name: CMake on a single platform
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-host-tools:
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+            working-directory: "./host"
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run CMake
+      run: cmake --workflow --preset default
+    - uses: actions/upload-artifact@v3
+      with:
+        name: host-tools
+        path: host/
+
+  build:
+    runs-on: ubuntu-latest
+    needs: build-host-tools
+
+    steps:
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: binutils-arm-none-eabi gcc-arm-none-eabi
+        version: 1.0
+
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
+      with:
+        name: host-tools
+	path: host/
+    - name: add-host-tools-to-path
+      run: echo "${PWD}/host/bin"  >>$GITHUB_PATH
+
+    - name: Run CMake
+      run: cmake --workflow --preset default
