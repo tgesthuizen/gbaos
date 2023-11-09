@@ -23,7 +23,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: host-tools
-        path: host/
+        path: host/host/
 
   build:
     runs-on: ubuntu-latest
@@ -39,9 +39,9 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: host-tools
-        path: ./host/
+        path: ~/host
     - name: add-host-tools-to-path
-      run: echo "${PWD}/host/bin"  >>$GITHUB_PATH
+      run: echo "${HOME}/host/bin" >>$GITHUB_PATH
 
     - name: Run CMake
       run: cmake --workflow --preset default
