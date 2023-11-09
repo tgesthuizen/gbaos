@@ -13,6 +13,10 @@ jobs:
         run:
             working-directory: "./host"
     steps:
+    - uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: ninja-build build-essential
+        version: 1.0
     - uses: actions/checkout@v3
     - name: Run CMake
       run: cmake --workflow --preset default
@@ -28,14 +32,14 @@ jobs:
     steps:
     - uses: awalsh128/cache-apt-pkgs-action@latest
       with:
-        packages: binutils-arm-none-eabi gcc-arm-none-eabi
+        packages: ninja-build binutils-arm-none-eabi gcc-arm-none-eabi
         version: 1.0
 
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
       with:
         name: host-tools
-        path: host/
+        path: ./host/
     - name: add-host-tools-to-path
       run: echo "${PWD}/host/bin"  >>$GITHUB_PATH
 
