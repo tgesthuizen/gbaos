@@ -24,7 +24,7 @@
 	},
 	{
 	    "name": "install",
-	    "inherits": "default",
+	    "inherits": "build",
 	    "targets": ["install"]
 	}
     ],
