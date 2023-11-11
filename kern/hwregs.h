@@ -21,6 +21,7 @@ enum cpu_modes {
 };
 
 #define PSR_MODE_MASK (0b11111)
+#define PSR_THUMB_MODE (1 << 5)
 #define PSR_FIQ_DISABLED (1 << 6)
 #define PSR_IRQ_DISABLED (1 << 7)
 #define PSR_ABORT_DISABLED (1 << 8)

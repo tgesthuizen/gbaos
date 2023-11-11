@@ -1,31 +1,68 @@
 #include "task.h"
 #include "hwregs.h"
 #include "irq.h"
+#include "panic.h"
+#include "timer.h"
 #include "types.h"
 
-static void idle_task() {
-  while (1)
-    ;
-}
+static void idle_task() { __asm volatile("swi 02\n"); }
 
 #define IDLE_STACK_SIZE 256
 static unsigned char idle_stack[IDLE_STACK_SIZE];
 static struct task_state idle_state;
 static struct task_state *current_task;
 
-static void handle_timer_overflow() {}
+static void reset_task_timer() {
+  struct timer_control_t tctrl;
+  tctrl.reload = 32;
+  tctrl.control =
+      timer_prescale_64 | TIMER_CONTROL_ENABLE_IRQ | TIMER_CONTROL_START;
+  TIMER_BASE[0] = tctrl;
+}
+
+static void handle_timer_overflow(struct irq_info *info) {
+  switch_task_from_irq(current_task->next, info);
+  reset_task_timer();
+}
+
+static void __attribute__((target("arm"))) switch_to_current_task() {
+  assert((current_task->regs.psr & PSR_THUMB_MODE) == 0);
+  __asm volatile(
+      ".Lswitch_current_task_arm:\n\t"
+      "msr cpsr, %[psr]\n\t"
+      "ldmfa %[regs], {r0-r15}\n\t"
+      :
+      : [psr] "r"(current_task->regs.psr), [regs] "r"(&*current_task->regs.r));
+}
 
 void init_task_system() {
-  idle_state.regs.r[13] = (u32)(idle_stack + IDLE_STACK_SIZE);
-  idle_state.regs.r[15] = (u32)(&idle_task);
+  idle_state.regs.r[13] = (uint32_t)(idle_stack + IDLE_STACK_SIZE);
+  idle_state.regs.r[15] = (uint32_t)(&idle_task);
+  idle_state.regs.psr = cpu_mode_user | PSR_THUMB_MODE;
   idle_state.next = &idle_state;
   current_task = &idle_state;
   register_irq(irq_kind_timer_0_overflow, &handle_timer_overflow);
 }
 
+void start_multitasking() {
+  reset_task_timer();
+  switch_to_current_task();
+}
+
 void add_task(struct task_state *new_task) {
   new_task->next = current_task->next;
   current_task->next = new_task;
+}
+
+void init_task_state(struct task_state *state, void (*entry)(void), void *sp) {
+  u32 entry_addr = (u32)entry;
+  // Enable Thumb mode if function is thumb
+  state->regs.psr = cpu_mode_user | ((entry_addr & 1) * PSR_THUMB_MODE);
+  for (int i = 0; i < 13; ++i)
+    state->regs.r[i] = 0;
+  state->regs.r[13] = (u32)sp;
+  state->regs.r[14] = 0;
+  state->regs.r[15] = entry_addr & (u32)~1;
 }
 
 struct task_state *get_current_task() { return current_task; }

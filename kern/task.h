@@ -1,6 +1,7 @@
 #ifndef KERN_TASK_H
 #define KERN_TASK_H
 
+#include "hwregs.h"
 #include "irq.h"
 #include "types.h"
 
@@ -17,7 +18,9 @@ struct task_state {
 void init_task_system();
 void add_task(struct task_state *state);
 
+void init_task_state(struct task_state *state, void (*entry)(void), void *sp);
 struct task_state *get_current_task();
 void switch_task_from_irq(struct task_state *state, struct irq_info *info);
+void start_multitasking();
 
 #endif

@@ -42,5 +42,6 @@ void init_irq() { IRQ_HANDLER_ADDR = &irq_entry; }
 
 void register_irq(enum irq_kind kind, irq_handler handler) {
   irq_table[kind] = handler;
+  IF |= 1 << kind;
   IE |= 1 << kind;
 }
