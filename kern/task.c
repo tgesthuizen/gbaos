@@ -16,7 +16,7 @@ static struct task_state *current_task;
 static void handle_timer_overflow() {}
 
 void init_task_system() {
-  idle_state.regs.r[13] = (u32)(&idle_stack + IDLE_STACK_SIZE);
+  idle_state.regs.r[13] = (u32)(idle_stack + IDLE_STACK_SIZE);
   idle_state.regs.r[15] = (u32)(&idle_task);
   idle_state.next = &idle_state;
   current_task = &idle_state;
