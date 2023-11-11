@@ -11,6 +11,13 @@ target_link_libraries(startfiles PUBLIC libc)
 
 add_library(startfiles_static STATIC $<TARGET_OBJECTS:startfiles>)
 
+set(libc_headers
+  assert.h
+  errno.h
+  stdlib.h
+  string.h
+)
+
 add_library(
   libc
   STATIC
@@ -39,3 +46,16 @@ set_target_properties(
   PROPERTIES
   OUTPUT_NAME c
 )
+
+install(TARGETS libc
+  DESTINATION ${GBA_INCLUDE_DIR}
+)
+install(FILES $<TARGET_OBJECTS:startfiles>
+  DESTINATION ${GBA_LIB_DIR}
+  RENAME crt0.o
+)
+foreach(hdr ${libc_headers})
+  install(FILES include/${hdr}
+    DESTINATION ${GBA_INCLUDE_DIR}
+  )
+endforeach()

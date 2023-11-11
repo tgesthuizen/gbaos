@@ -14,6 +14,12 @@ add_compile_options(
   -mthumb
 )
 
+set(GBA_DATA_DIR ${CMAKE_INSTALL_DATADIR}/lib/gba)
+set(GBA_SYSROOT_DIR ${GBA_DATA_DIR}/sysroot/)
+set(GBA_BIN_DIR ${GBA_SYSROOT_DIR}/bin)
+set(GBA_INCLUDE_DIR ${GBA_SYSROOT_DIR}/include)
+set(GBA_LIB_DIR ${GBA_SYSROOT_DIR}/lib)
+
 set(SYSTEM_PAGE_SIZE 512)
 set(ROOTFS_FILE ${CMAKE_CURRENT_BINARY_DIR}/root.romfs)
 
@@ -53,6 +59,9 @@ function(add_romfs_binary bin_target)
     COMMAND ${CMAKE_OBJCOPY} -S ${ROM_ROOT}/bin/${bin_target}
   )
   add_dependencies(rootfs_files ${bin_target})
+  install(TARGETS ${bin_target}
+    DESTINATION ${GBA_BIN_DIR}
+  )
 endfunction()
 
 add_subdirectory(tools)
@@ -66,4 +75,8 @@ add_custom_command(
 add_custom_target(
   rootfs
   DEPENDS ${ROOTFS_FILE}
+)
+
+install(FILES ${ROOTFS_FILE}
+  DESTINATION ${GBA_DATA_DIR}
 )

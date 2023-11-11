@@ -60,6 +60,6 @@ install(
 )
 
 install(
-  FILES kernel.gba
-  DESTINATION ${CMAKE_INSTALL_DATADIR}
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/kernel.gba
+  DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
