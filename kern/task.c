@@ -25,10 +25,9 @@ static void handle_timer_overflow(struct irq_info *info) {
   reset_task_timer();
 }
 
-static void __attribute__((target("arm"))) switch_to_current_task() {
+static void __attribute__((target("arm"), noinline)) switch_to_current_task() {
   assert((current_task->regs.psr & PSR_THUMB_MODE) == 0);
   __asm volatile(
-      ".Lswitch_current_task_arm:\n\t"
       "msr cpsr, %[psr]\n\t"
       "ldmfa %[regs], {r0-r15}\n\t"
       :
