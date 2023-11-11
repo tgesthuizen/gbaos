@@ -14,6 +14,7 @@ add_executable(
   irq.c
   kstart.s
   main.c
+  panic.c
   romfs.c
   string.c
   task.c
