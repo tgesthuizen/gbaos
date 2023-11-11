@@ -47,4 +47,9 @@ jobs:
         echo "${HOME}/host/bin" >>$GITHUB_PATH
 
     - name: Run CMake
-      run: cmake --workflow --preset default
+      run: cmake --workflow --preset ci
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: gbaos
+	path: gbaos

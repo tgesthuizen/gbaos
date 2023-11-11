@@ -7,10 +7,11 @@
     },
     "configurePresets": [
 	{
-	    "name": "default",
+	    "name": "conf-ci",
 	    "displayName": "Default configuration",
 	    "generator": "Ninja",
 	    "binaryDir": "${sourceDir}/build-gcc",
+	    "installDir": "${sourceDir}/gbaos",
 	    "toolchainFile": "${sourceDir}/gba-gcc.tc",
 	    "cacheVariables": {
 		"CMAKE_BUILD_TYPE": "MinSizeRel"
@@ -19,18 +20,24 @@
     ],
     "buildPresets": [
 	{
-	    "name": "build",
-	    "configurePreset": "default"
+	    "name": "build-ci",
+	    "configurePreset": "conf-ci"
+	},
+	{
+	    "name": "install-ci",
+	    "inherits": "build-ci",
+	    "targets": ["install"]
 	}
     ],
     "workflowPresets": [
 	{
-	    "name": "default",
+	    "name": "ci",
 	    "displayName": "Default",
 	    "description": "Build the project with default settings",
 	    "steps": [
-		{"type": "configure", "name": "default"},
-		{"type": "build", "name": "build"}
+		{"type": "configure", "name": "conf-ci"},
+		{"type": "build", "name": "build-ci"},
+		{"type": "build", "name": "install-ci"}
 	    ]
 	}
     ]
