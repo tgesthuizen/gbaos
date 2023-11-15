@@ -6,6 +6,11 @@ target_include_directories(kernel-headers INTERFACE include)
 
 configure_file(romfs.s.in ${CMAKE_CURRENT_BINARY_DIR}/romfs.s @ONLY)
 
+set(kernel_public_headers
+  kern/errno.h
+  kern/syscall.h
+)
+
 add_executable(
   kernel
 
@@ -56,10 +61,16 @@ add_custom_command(
   COMMENT "Generating kernel.gba"
 )
 
+foreach(kheader ${kernel_public_headers})
+  get_filename_component(include_subdir ${kheader} DIRECTORY)
+  install(FILES include/${kheader}
+    DESTINATION ${GBA_INCLUDE_DIR}/${include_subdir}
+  )
+endforeach()
+
 install(
   TARGETS kernel
 )
-
 install(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/kernel.gba
   DESTINATION ${CMAKE_INSTALL_BINDIR}
