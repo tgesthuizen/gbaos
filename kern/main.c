@@ -29,7 +29,7 @@ static void init_task() {
   }
 }
 
-#define INIT_TASK_STACK_SIZE 512
+#define INIT_TASK_STACK_SIZE 256
 static unsigned char init_task_stack[INIT_TASK_STACK_SIZE];
 static struct task_state the_init_task;
 
@@ -40,9 +40,10 @@ int main() {
   video_mode_reg = 0x403;
   enable_interrupts();
   init_task_system();
-  init_task_state(&the_init_task, init_task,
+  init_task_state(&the_init_task, "init", init_task,
                   init_task_stack + INIT_TASK_STACK_SIZE);
   add_task(&the_init_task);
   start_multitasking();
+
   return 0;
 }
