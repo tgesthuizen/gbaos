@@ -1,5 +1,8 @@
 # gbaos
 
+**WARNING**: This is project has been superseded by
+[BradypOS](https://github.com/tgesthuizen/BradypOS/).
+
 This project provides a very WIP kernel and userland for the Gameboy
 Advance, nicely linking into a GBA cartridge you can run on the actual
 console or an emulator like `mgba`.
