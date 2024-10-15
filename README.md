@@ -1,6 +1,6 @@
 # gbaos
 
-**WARNING**: This is project has been superseded by
+**WARNING**: This project has been superseded by
 [BradypOS](https://github.com/tgesthuizen/BradypOS/).
 
 This project provides a very WIP kernel and userland for the Gameboy
